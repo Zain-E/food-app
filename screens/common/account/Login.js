@@ -1,84 +1,85 @@
-import { Button, Input } from "react-native-elements";
-import { Controller, useForm } from "react-hook-form";
+import { Button, TextInput } from "react-native-paper";
+import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
+import React, { useState } from "react";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { StyleSheet, Text, View } from "react-native";
 
-import React from "react";
+import { auth } from "../../../firebase";
 
 export default function Login() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [phoneNumber, setPhoneNumber] = useState("+44 7448 637926");
+  const [otp, setOtp] = useState("");
+  const [verificationId, setVerificationId] = useState();
+  const generateRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "normal",
+        callback: (response) => {
+          console.log("prepared phone auth process");
+        },
+        "expired-callback": () => {
+          console.log("expired");
+        },
+      }
+    );
+  };
+  const requestOtp = async () => {
+    setVerificationId(1);
+    console.log("requesting otp");
+    generateRecaptcha();
 
-  const onSubmit = (data) => console.log(data);
+    const phoneProvider = new PhoneAuthProvider(auth);
+    console.log(phoneNumber);
+    const verificationId = await phoneProvider.verifyPhoneNumber(phoneNumber);
+    console.log(verificationId);
+    setVerificationId(verificationId);
+  };
+
+  const verifyOtp = async () => {
+    const credential = PhoneAuthProvider.credential(verificationId, otp);
+    await signInWithCredential(auth, credential);
+  };
 
   return (
-    <View style={styles.container}>
-      <Controller
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            onBlur={onBlur}
-            onChangeText={(value) => onChange(value)}
-            value={value}
-            placeholder="Mobile Number"
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        padding: 20,
+      }}
+    >
+      {!verificationId && (
+        <>
+          <TextInput
+            style={{ marginBottom: 10 }}
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            placeholder="Phone Number"
             keyboardType="phone-pad"
-            errorMessage={errors.mobileNumber && "This is required."}
           />
-        )}
-        name="mobileNumber"
-        rules={{ required: true }}
-        defaultValue=""
-      />
-      <Button title="Continue" onPress={handleSubmit(onSubmit)} />
 
-      <Text style={styles.separator}>or</Text>
+          <Button mode="contained" onPress={requestOtp}>
+            Get OTP
+          </Button>
+        </>
+      )}
+      {verificationId && (
+        <>
+          <TextInput
+            style={{ marginBottom: 10 }}
+            value={otp}
+            onChangeText={setOtp}
+            placeholder="OTP"
+            keyboardType="phone-pad"
+          />
 
-      {/* <AppleButton
-        buttonStyle={AppleButton.Style.WHITE}
-        buttonType={AppleButton.Type.SIGN_IN}
-        style={styles.button}
-        onPress={() => console.log("Apple sign in")}
-      />
-
-      <GoogleSigninButton
-        style={styles.button}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={() => console.log("Google sign in")}
-      />
-
-      <LoginButton
-        style={styles.button}
-        onLoginFinished={() => console.log("Facebook sign in")}
-      /> */}
-      <Button
-        style={{ marginBottom: 10 }}
-        title="Continue with Google"
-        onPress={() => console.log("Email sign in")}
-      />
-      <Button
-        title="Continue with Email"
-        onPress={() => console.log("Email sign in")}
-      />
+          <Button mode="contained" onPress={verifyOtp}>
+            Verify OTP
+          </Button>
+        </>
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  button: {
-    width: 200,
-    height: 48,
-    marginBottom: 10,
-  },
-  separator: {
-    marginVertical: 20,
-    textAlign: "center",
-  },
-});

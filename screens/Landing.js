@@ -1,4 +1,5 @@
-import { Button, Pressable, SafeAreaView, Text } from "react-native";
+import { Button, Text } from "react-native-paper";
+import { Pressable, SafeAreaView } from "react-native";
 
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -8,24 +9,26 @@ export default function Landing() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>
-        <h1>Welcome Foodie !!!</h1>
-      </Text>
+      <Text variant="headlineMedium">Welcome Foodie !!!</Text>
       <br />
-      <Pressable
-        style={styles.button}
+      <Button
+        icon="food"
+        mode="contained"
+        contentStyle={{ flexDirection: "row-reverse", width: "300px" }}
         onPress={() => navigation.navigate("BuyerHome")}
       >
-        <Text style={styles.text}>I want food</Text>
-      </Pressable>
+        I want food
+      </Button>
 
       <br />
-      <Pressable
-        style={styles.button}
+      <Button
+        icon="food-turkey"
+        mode="contained"
+        contentStyle={{ flexDirection: "row-reverse", width: "300px" }}
         onPress={() => navigation.navigate("PP")}
       >
-        <Text style={styles.text}>I want to sell food</Text>
-      </Pressable>
+        I want to sell food
+      </Button>
     </SafeAreaView>
   );
 }

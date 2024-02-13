@@ -1,6 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { Button, Text, TextInput } from "react-native-paper";
 import React, { useState } from "react";
-import { View, Text, TextInput, Button } from "react-native";
+
+import { View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const SellerOnboarding = () => {
   const [kitchenName, setKitchenName] = useState("");
@@ -17,47 +19,46 @@ const SellerOnboarding = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Create your kitchen</Text>
-
+      <Text variant="headlineSmall">Create your kitchen</Text>
+      <br></br>
       <TextInput
-        style={styles.input}
+        style={{ marginBottom: 10 }}
         placeholder="Kitchen name"
         value={kitchenName}
         onChangeText={setKitchenName}
       />
 
       <TextInput
-        style={styles.input}
+        style={{ marginBottom: 10 }}
         placeholder="Contact name"
         value={contactName}
         onChangeText={setContactName}
       />
 
       <TextInput
-        style={styles.input}
+        style={{ marginBottom: 10 }}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
       />
 
       <TextInput
-        style={styles.input}
+        style={{ marginBottom: 10 }}
         placeholder="Mobile number"
         value={mobileNumber}
         onChangeText={setMobileNumber}
       />
-
-      <Button
-        title="Get Location"
-        onPress={getLocation}
-        style={styles.button}
-      />
+      <br></br>
+      <Button mode="outlined" onPress={getLocation}>
+        Get location
+      </Button>
       <br></br>
       <Button
-        title="Continue"
+        mode="contained"
         onPress={() => navigation.navigate("SellerKitchenAvailability")}
-        style={styles.button}
-      />
+      >
+        Continue
+      </Button>
     </View>
   );
 };

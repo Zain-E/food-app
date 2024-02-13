@@ -1,5 +1,6 @@
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
+import { Menu } from "react-native-paper";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,25 +16,36 @@ export default function ProfilePage() {
   };
 
   return (
-    <SafeAreaView>
-      <View>
-        <br />
-        <Pressable style={styles.button} onPress={navigateToPage1}>
-          <Text style={styles.text}>Login</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={navigateToPage2}>
-          <Text style={styles.text}>Need Help</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={navigateToPage2}>
-          <Text style={styles.text}>Edit Account</Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => navigation.navigate("OrderHistory")}
-        >
-          <Text style={styles.text}>Order History</Text>
-        </Pressable>
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Menu.Item
+        leadingIcon="account"
+        onPress={() => {
+          navigation.navigate("Login");
+        }}
+        title="Login"
+      />
+
+      <Menu.Item
+        leadingIcon="account-edit"
+        onPress={() => {
+          navigation.navigate("EditAccount");
+        }}
+        title="Edit Account"
+      />
+      <Menu.Item
+        leadingIcon="help-circle"
+        onPress={() => {
+          navigation.navigate("SignUp");
+        }}
+        title="Need Help"
+      />
+      <Menu.Item
+        leadingIcon="history"
+        onPress={() => {
+          navigation.navigate("OrderHistory");
+        }}
+        title="Order History"
+      />
     </SafeAreaView>
   );
 }

@@ -3,15 +3,15 @@ import {
   SafeAreaView,
   ScrollView,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 // import LottieView from "lottie-react-native";
 import MenuItems from "../components/restaurantDetail/MenuItems";
-import firebase from "../firebase";
-import { useSelector } from "react-redux";
+import { app } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 export default function OrderCompleted() {
   const navigation = useNavigation();
@@ -41,17 +41,17 @@ export default function OrderCompleted() {
   });
 
   useEffect(() => {
-    // const db = firebase.firestore();
-    // const unsubscribe = db
-    //   .collection("orders")
-    //   .orderBy("createdAt", "desc")
-    //   .limit(1)
-    //   .onSnapshot((snapshot) => {
-    //     snapshot.docs.map((doc) => {
-    //       setLastOrder(doc.data());
-    //     });
-    //   });
-    // return () => unsubscribe();
+    const db = app.firestore();
+    const unsubscribe = db
+      .collection("orders")
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .onSnapshot((snapshot) => {
+        snapshot.docs.map((doc) => {
+          setLastOrder(doc.data());
+        });
+      });
+    return () => unsubscribe();
   }, []);
 
   return (

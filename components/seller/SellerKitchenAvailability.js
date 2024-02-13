@@ -1,59 +1,89 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Switch,
-  ScrollView,
-  TextInput,
-  Button,
-  StyleSheet,
-} from "react-native";
+import { Button, Switch, Text, TextInput } from "react-native-paper";
+import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
+import React, { useCallback, useRef, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+
 import { CheckBox } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
 const SellerKitchenAvailability = () => {
   const [kitchenOpen, setKitchenOpen] = useState(true);
   const navigation = useNavigation();
+  const [visible, setVisible] = useState(false);
+  const [visibleCloseTime, setVisibleCloseTime] = useState(false);
+  const onDismiss = useCallback(() => {
+    setVisible(false);
+    setVisibleCloseTime(false);
+  }, [setVisible, setVisibleCloseTime]);
+
+  const onConfirm = useCallback(
+    ({ hours, minutes }) => {
+      setVisible(false);
+      console.log({ hours, minutes });
+    },
+    [setVisible]
+  );
   const days = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
 
   const [selectedDays, setSelectedDays] = useState([]);
 
   const [timing, setTiming] = useState({
     Monday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: true,
     },
     Tuesday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: false,
     },
     Wednesday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: true,
     },
     Thursday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: false,
     },
     Friday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: true,
     },
     Saturday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: true,
     },
     Sunday: {
-      open: null,
-      close: null,
+      startTimeHours: "10",
+      startTimeMinutes: "00",
+      endTimeHours: "8",
+      endTimeMinutes: "30",
+      isOpen: true,
     },
   });
 
@@ -61,16 +91,92 @@ const SellerKitchenAvailability = () => {
     // update selectedDays state
   };
 
-  const handleTimeChange = (day, openOrClose, time) => {
-    // update timing state
+  const handleTimeChange = (day, openOrClose, hours, minutes) => {
+    console.log(day, openOrClose, hours, minutes);
+    if (openOrClose === "open") {
+      setTiming({
+        ...timing,
+        [day]: {
+          ...timing[day],
+          startTimeHours: hours,
+          startTimeMinutes: minutes,
+        },
+      });
+    } else {
+      setTiming({
+        ...timing,
+        [day]: {
+          ...timing[day],
+          endTimeHours: hours,
+          endTimeMinutes: minutes,
+        },
+      });
+    }
+    setVisible(false);
+    setVisibleCloseTime(false);
   };
 
+  const Day = ({ day, timing }) => {
+    const ref = useRef();
+    return (
+      <View style={styles.day}>
+        <View style={styles.dayOptions}>
+          <Text style={styles.dayText}>{day}</Text>
+
+          <Switch
+            value={timing[day].isOpen}
+            onValueChange={() => handleDayChange(day)}
+          />
+        </View>
+        <View style={styles.timing}>
+          {/* <Text>Open</Text> */}
+          <Button
+            onPress={() => setVisible(true)}
+            uppercase={false}
+            mode="outlined"
+          >
+            {`Start time ${timing[day].startTimeHours}:${timing[day].startTimeMinutes}`}
+          </Button>
+          <TimePickerModal
+            ref={ref}
+            visible={visible}
+            style={styles.timeInput}
+            placeholder="Open"
+            hours={timing[day].startTimeHours}
+            minutes={timing[day].startTimeMinutes}
+            onDismiss={onDismiss}
+            onConfirm={({ hours, minutes }) =>
+              handleTimeChange(day, "open", hours, minutes)
+            }
+          />
+
+          <Button
+            onPress={() => setVisibleCloseTime(true)}
+            uppercase={false}
+            mode="outlined"
+          >
+            {`End time ${timing[day].endTimeHours}:${timing[day].endTimeMinutes}`}
+          </Button>
+          <TimePickerModal
+            visible={visibleCloseTime}
+            style={styles.timeInput}
+            placeholder="Open"
+            hours={timing[day].endTimeHours}
+            minutes={timing[day].endTimeMinutes}
+            onDismiss={onDismiss}
+            onConfirm={({ hours, minutes }) =>
+              handleTimeChange(day, "close", hours, minutes)
+            }
+          />
+        </View>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Kitchen Availability</Text>
-
+      <Text variant="headlineSmall">Kitchen Availability</Text>
       <View style={styles.toggle}>
-        <Text>Open / Closed</Text>
+        <Text variant="bodyMedium">Open / Closed</Text>
         <Switch
           value={kitchenOpen}
           onValueChange={() => setKitchenOpen(!kitchenOpen)}
@@ -79,42 +185,18 @@ const SellerKitchenAvailability = () => {
 
       <ScrollView style={styles.days}>
         {days.map((day) => (
-          <View key={day} style={styles.day}>
-            <View style={styles.dayOptions}>
-              <Text style={styles.dayText}>{day}</Text>
-
-              <Switch
-                value={selectedDays.includes(day)}
-                onValueChange={() => handleDayChange(day)}
-              />
-            </View>
-            <View style={styles.timing}>
-              {/* <Text>Open</Text> */}
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Open"
-                value={timing[day].open}
-                onChangeText={(time) => handleTimeChange(day, "open", time)}
-              />
-
-              {/* <Text>Close</Text> */}
-              <TextInput
-                style={styles.timeInput}
-                placeholder="Close"
-                value={timing[day].close}
-                onChangeText={(time) => handleTimeChange(day, "close", time)}
-              />
-            </View>
-          </View>
+          <Day key={day} day={day} timing={timing} />
         ))}
       </ScrollView>
       <CheckBox title={"Delivery"} />
       <CheckBox title={"Pickup"} />
       <br></br>
       <Button
-        title="Continue"
+        mode="contained"
         onPress={() => navigation.navigate("AddOrEditItem")}
-      />
+      >
+        Continue
+      </Button>
     </View>
   );
 };
