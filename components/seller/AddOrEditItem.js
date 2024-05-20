@@ -1,87 +1,145 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import MenuItemsAdd from "../sellerDetail/MenuItemsAdd";
-import { useNavigation } from "@react-navigation/native";
-import { Button } from "react-native-elements";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
+import {
+  Button,
+  FAB,
+  List,
+  Modal,
+  Portal,
+  Provider,
+  Text,
+  TextInput,
+} from "react-native-paper";
+import React, { useEffect, useState } from "react";
 
-export default function AddOrEditItem() {
-  const navigation = useNavigation();
-  const [foods, setFoods] = useState([
-    {
-      title: "Lasagna",
-      description: "With butter lettuce, tomato and sauce bechamel",
-      price: "£13.50",
-      image:
-        "https://www.modernhoney.com/wp-content/uploads/2019/08/Classic-Lasagna-14-scaled.jpg",
-    },
-    {
-      title: "Tandoori Chicken",
-      description:
-        "Amazing Indian dish with tenderloin chicken off the sizzles 🔥",
-      price: "£19.20",
-      image: "https://i.ytimg.com/vi/BKxGodX9NGg/maxresdefault.jpg",
-    },
-  ]);
+import { supabase } from "../../lib/supabase";
+
+const AddOrEditItem = ({ navigation }) => {
+  const [foods, setFoods] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [cuisineTypes, setCuisineTypes] = useState([]); // List of cuisines
+  const [selectedCuisine, setSelectedCuisine] = useState([]); // For multi-select
+  const [cuisineSearchQuery, setCuisineSearchQuery] = useState("");
+
+  useEffect(() => {
+    fetchMenuItems();
+    fetchCuisineTypes(); 
+  }, []);
+
+  const fetchMenuItems = async () => {
+    try {
+      
+      const { data, error } = await supabase
+        .from("menu_items") // Replace with your table name
+        .select("*");
+
+      if (error) {
+        console.error("Error fetching menu items:", error);
+        return;
+      }
+
+      setFoods(data);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  };
 
   const addItem = () => {
-    setFoods([
-      ...foods,
-      {
-        title: "Chilaquiles",
-        description:
-          "Chilaquiles with cheese and sauce. A delicious mexican dish 🇲🇽",
-        price: "£14.50",
-        image:
-          "https://i2.wp.com/chilipeppermadness.com/wp-content/uploads/2020/11/Chilaquales-Recipe-Chilaquiles-Rojos-1.jpg",
-      },
-    ]);
+    setSelectedFood(null); // Clear for new item
+    setModalVisible(true);
+  };
+
+  const editItem = (item) => {
+    setSelectedFood(item);
+    setModalVisible(true);
+  };
+
+  const saveItem = async (updatedItem) => {
+    try {
+      if (selectedFood) {
+        // Update existing item
+        const { error } = await supabase
+          .from("menu_items")
+          .update(updatedItem)
+          .match({ id: selectedFood.id }); 
+
+        if (error) throw error;
+      } else {
+        // Add new item
+        const { error } = await supabase
+          .from("menu_items")
+          .insert(updatedItem);
+        if (error) throw error;
+      }
+
+      fetchMenuItems();
+      setModalVisible(false);
+    } catch (error) {
+      Alert.alert("Error", error.message || "An error occurred");
+    }
   };
 
   return (
-    <View>
-      <h1 style={styles.titleStyle}>Add / Edit Item</h1>
-      <br></br>
-      <Button onPress={() => addItem()} title="Add Item" />
-      {/* <Divider width={1.8} style={{ marginVertical: 20 }} /> */}
-      <MenuItemsAdd foods={foods} />
-      <Button
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "green",
-        }}
-        onPress={() => navigation.navigate("SellerHome")}
-        title="Preview"
-      />
-    </View>
+    <Provider>
+      <View style={styles.container}>
+        <Text variant="headlineLarge" style={styles.title}>
+          Add / Edit Item
+        </Text>
+
+        <FlatList
+          data={foods}
+          keyExtractor={(item) => item.id.toString()} // Assuming items have an 'id'
+          renderItem={({ item }) => (
+            <List.Item
+              title={item.title}
+              description={item.description}
+              right={() => (
+                <Button onPress={() => editItem(item)}>Edit</Button>
+              )}
+            />
+          )}
+        />
+
+        <Portal>
+          <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)}>
+            <View style={styles.modalContent}>
+              <TextInput label="Title" value={selectedFood?.title} />
+              <TextInput label="Description" value={selectedFood?.description} />
+              <TextInput label="Price" value={selectedFood?.price} />
+              
+
+              <Button onPress={() => saveItem(selectedFood)}>Save</Button>
+            </View>
+          </Modal>
+        </Portal>
+
+        <FAB
+          icon="plus"
+          style={styles.fab}
+          onPress={addItem}
+        />
+
+        <Button onPress={() => navigation.navigate("SellerHome")}>Preview</Button>
+      </View>
+    </Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  menuItemStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  container: { flex: 1, padding: 16 },
+  title: { marginBottom: 16 },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 22,
     margin: 20,
-  },
-
-  titleStyle: {
-    fontSize: 19,
-    fontWeight: "600",
-  },
-  button: {
-    backgroundColor: "#2196F3",
-    color: "white",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  pressed: {
-    opacity: 0.5,
+    borderRadius: 4,
   },
 });
+
+export default AddOrEditItem;

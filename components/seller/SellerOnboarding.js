@@ -18,7 +18,8 @@ const SellerOnboarding = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+     <View style={styles.container}>
       <Text variant="headlineSmall">Create your kitchen</Text>
       <br></br>
       <TextInput
@@ -48,6 +49,24 @@ const SellerOnboarding = () => {
         value={mobileNumber}
         onChangeText={setMobileNumber}
       />
+      
+    </View>
+    <View style={styles.container}>
+      <Text variant="headlineSmall">Account Details</Text>
+      <br></br>
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder="Account number"
+        value={kitchenName}
+        onChangeText={setKitchenName}
+      />
+
+      <TextInput
+        style={{ marginBottom: 10 }}
+        placeholder="Sort Code"
+        value={contactName}
+        onChangeText={setContactName}
+      />
       <br></br>
       <Button mode="outlined" onPress={getLocation}>
         Get location
@@ -60,6 +79,8 @@ const SellerOnboarding = () => {
         Continue
       </Button>
     </View>
+    </>
+   
   );
 };
 

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 // import LottieView from "lottie-react-native";
 import OrderItem from "./OrderItem";
-import firebase from "../../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
@@ -25,24 +24,7 @@ export default function ViewCart() {
     currency: "GBP",
   });
 
-  const addOrderToFireBase = () => {
-    setLoading(true);
-    // const db = firebase.firestore();
-    // db.collection("orders")
-    //   .add({
-    //     items: items,
-    //     restaurantName: restaurantName,
-    //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .then(() => {
-    //     setTimeout(() => {
-    //       setLoading(false);
-    //       navigation.navigate("OrderCompleted");
-    //     }, 2500);
-    //   });
-    setLoading(false);
-    navigation.navigate("OrderCompleted");
-  };
+ 
 
   const styles = StyleSheet.create({
     modalContainer: {
@@ -104,7 +86,6 @@ export default function ViewCart() {
                   position: "relative",
                 }}
                 onPress={() => {
-                  addOrderToFireBase();
                   setModalVisible(false);
                 }}
               >

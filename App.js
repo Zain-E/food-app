@@ -7,7 +7,7 @@ import AddOrEditItem from "./components/seller/AddOrEditItem";
 import BuyerHome from "./screens/BuyerHome";
 import CreateSeller from "./components/seller/SellerOnboarding";
 import Landing from "./screens/Landing";
-import Login from "./screens/common/account/login";
+import Login from "./screens/common/account/Login";
 import { NavigationContainer } from "@react-navigation/native";
 import OrderCompleted from "./screens/OrderCompleted";
 import OrderHistory from "./screens/common/OrderHistory";
@@ -73,7 +73,7 @@ export default function App() {
       <NavigationContainer>
         <PaperProvider theme={theme}>
           <Stack.Navigator
-            initialRouteName="Landing"
+            initialRouteName="AddOrEditItem"
             screenOptions={{
               headerShown: false,
             }}

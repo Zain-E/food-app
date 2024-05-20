@@ -9,7 +9,6 @@ import {
 
 // import LottieView from "lottie-react-native";
 import MenuItems from "../components/restaurantDetail/MenuItems";
-import { app } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
