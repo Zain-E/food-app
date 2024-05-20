@@ -10,16 +10,13 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
-    "@react-native-firebase/app": "^18.8.0",
-    "@react-native-firebase/auth": "^18.8.0",
-    "@react-native-firebase/crashlytics": "^18.8.0",
-    "@react-native-google-signin/google-signin": "^10.1.1",
+   
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
     "expo": "~49.0.15",
     "expo-dev-client": "~2.4.12",
     "expo-status-bar": "~1.6.0",
-    "firebase": "^10.8.0",
+    
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.49.0",
@@ -47,6 +44,7 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0"
+
   },
   "private": true
 }
