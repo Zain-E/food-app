@@ -42,7 +42,7 @@ export default function ProfilePage() {
       <Menu.Item
         leadingIcon="history"
         onPress={() => {
-          navigation.navigate("OrderHistory");
+          navigation.navigate("Order History");
         }}
         title="Order History"
       />

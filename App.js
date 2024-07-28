@@ -73,7 +73,7 @@ export default function App() {
       <NavigationContainer>
         <PaperProvider theme={theme}>
           <Stack.Navigator
-            initialRouteName="AddOrEditItem"
+            initialRouteName="Landing"
             screenOptions={{
               headerShown: false,
             }}
@@ -101,7 +101,7 @@ export default function App() {
             <Stack.Screen name="PP" component={PrivacyPolicy} />
             <Stack.Screen
               options={{ headerShown: true }}
-              name="OrderHistory"
+              name="Order History"
               component={OrderHistory}
             />
           </Stack.Navigator>

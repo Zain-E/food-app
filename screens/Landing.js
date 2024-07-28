@@ -9,7 +9,7 @@ export default function Landing() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text variant="headlineMedium">Welcome Foodie !!!</Text>
+      <Text variant="headlineMedium">Welcome Foodie</Text>
       <br />
       <Button
         icon="food"

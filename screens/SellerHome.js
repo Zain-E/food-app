@@ -5,6 +5,8 @@ import { Divider } from "react-native-elements";
 import MenuItems from "../components/sellerDetail/MenuItems";
 import React from "react";
 import ProfileIcon from "../components/common/ProfileIcon";
+import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const foods = [
   {
@@ -46,6 +48,8 @@ const foods = [
   },
 ];
 export default function SellerHome() {
+  const navigation = useNavigation();
+
   return (
     <View>
       <div
@@ -72,6 +76,11 @@ export default function SellerHome() {
       />
       <Divider width={1.8} style={{ marginVertical: 20 }} />
       <MenuItems foods={foods} />
+      <Button mode="contained" style={{ margin: 20 }} 
+               onPress={() => navigation.navigate("SellerKitchenAvailability")}
+
+      >Update Store Data</Button>
+
     </View>
   );
 }

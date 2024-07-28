@@ -5,6 +5,7 @@ import { Divider } from "react-native-elements";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { Chip } from "react-native-paper";
 
 const styles = StyleSheet.create({
   menuItemStyle: {
@@ -47,12 +48,12 @@ const FoodInfo = (props) => (
     <Text style={styles.titleStyle}>{props.food.title}</Text>
     <Text>{props.food.description}</Text>
     <Text>{props.food.price}</Text>
-    <View style={{ flexDirection: "column" }}>
-      <BouncyCheckbox isChecked={true} style={{ padding: 10 }} text="Halal" />
-      <BouncyCheckbox style={{ padding: 10 }} text="Veg" />
-      <BouncyCheckbox style={{ padding: 10 }} text="Gluten Free" />
-      <BouncyCheckbox style={{ padding: 10 }} text="Keto" />
-      <BouncyCheckbox style={{ padding: 10 }} text="Vegan" />
+    <View style={{ flexDirection: "row" }}>
+      <Chip  style={{ margin: 1 }} >Halal </Chip>
+      <Chip style={{ margin: 1 }} >Veg  </Chip>
+      <Chip style={{ margin: 1 }} >Gluten Free  </Chip>
+      <Chip style={{ margin: 1 }} >Keto  </Chip>
+      <Chip style={{ margin: 1 }} >Vegan  </Chip>
     </View>
   </View>
 );

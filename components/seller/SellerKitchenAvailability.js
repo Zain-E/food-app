@@ -1,4 +1,4 @@
-import { Button, Switch, Text, TextInput } from "react-native-paper";
+import { Button, Divider, Switch, Text, TextInput } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import React, { useCallback, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -176,20 +176,21 @@ const SellerKitchenAvailability = () => {
     <View style={styles.container}>
       <Text variant="headlineSmall">Kitchen Availability</Text>
       <View style={styles.toggle}>
-        <Text variant="bodyMedium">Open / Closed</Text>
+        <Text variant="bodyMedium">{kitchenOpen?`Open`:`Closed`}</Text>
         <Switch
           value={kitchenOpen}
           onValueChange={() => setKitchenOpen(!kitchenOpen)}
         />
       </View>
-
+<Divider className='mb-5'/>
+<br></br>
       <ScrollView style={styles.days}>
         {days.map((day) => (
           <Day key={day} day={day} timing={timing} />
         ))}
       </ScrollView>
-      <CheckBox title={"Delivery"} />
-      <CheckBox title={"Pickup"} />
+      <CheckBox title={"I will deliver the food"} />
+      <CheckBox title={"I want the customer to pickup from me"} />
       <br></br>
       <Button
         mode="contained"

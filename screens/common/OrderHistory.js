@@ -56,12 +56,12 @@ const OrderHistory = () => {
         onValueChange={setValue}
         buttons={[
           {
-            value: "Selling History",
-            label: "Selling History",
+            value: "Selling",
+            label: "Selling",
           },
           {
-            value: "Purchasing History",
-            label: "Purchasing History",
+            value: "Purchasing",
+            label: "Purchasing ",
           },
         ]}
       />
